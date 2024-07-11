@@ -1,7 +1,6 @@
 # #Задание №2 - Программа, которая рассчитывает положение точки относительно
 # окружности.
-
-
+import argparse
 import math
 
 # Эта функция читает данные об окружности из нашего файла
@@ -36,14 +35,32 @@ def point_position(x_center, y_center, radius, x, y):
         return 2  # Снаружи окружности
 
 def main():
-    circle_file = 'circle.txt'
-    points_file = 'dot.txt'
+    parser = argparse.ArgumentParser(description="Определение положения точки относительно окружности")
+    parser.add_argument('-c', '--circle', type=str, help="Путь к файлу с данными об окружности")
+    parser.add_argument('-p', '--points', type=str, help="Путь к файлу с координатами точек")
+    args = parser.parse_args()
+
+    if args.circle is None:
+        circle_file = input("Введите путь к файлу с данными об окружности: ")
+    else:
+        circle_file = args.circle
+
+    if args.points is None:
+        points_file = input("Введите путь к файлу с координатами точек: ")
+    else:
+        points_file = args.points
 
     x_center, y_center, radius = read_circle_data(circle_file)
     points = read_points(points_file)
 
     for x, y in points:
-        print(point_position(x_center, y_center, radius, x, y))
+        position = point_position(x_center, y_center, radius, x, y)
+        if position == 0:
+            print(f"0 - Точка ({x}, {y}) находится на окружности.")
+        elif position == 1:
+            print(f"1 - Точка ({x}, {y}) находится внутри окружности.")
+        else:
+            print(f"2 -Точка ({x}, {y}) находится снаружи окружности.")
 
-# Запускаем программу
+
 main()
